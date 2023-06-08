@@ -2,6 +2,8 @@ package com.springBoot.PS_Intern.api.controller;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,7 @@ import com.springBoot.PS_Intern.service.CandidateService;
 @RequestMapping("/api")
 public class CandidateController {
 	
+	Logger logger=LoggerFactory.getLogger(CandidateController.class);
 	private CandidateService candidateService;
 	
 	@Autowired
@@ -30,22 +33,25 @@ public class CandidateController {
 		this.candidateService = candidateService;
 	}
 	
+	
 	//POST REQUEST
 	@PostMapping(value = "/candidate")
 	public ResponseEntity<Candidate> saveCandidate(@RequestBody Candidate candidate) {
-		
+		logger.info("Request received to save Candidate with id={} onto Database",candidate.getId());		
 		return new ResponseEntity<Candidate>(candidateService.saveCandidate(candidate), HttpStatus.CREATED);
 	}
 	
 	//GET REQUEST
 	@GetMapping("/candidate/{id}")
 	public ResponseEntity<Candidate> getCandidateById(@PathVariable("id") long candidateId) {
+		logger.info("Request received to get Candidate with id={} onto Database",candidateId);
 		return new ResponseEntity<Candidate>(candidateService.getCandidateById(candidateId), HttpStatus.OK);
 	}
 	
 	//UPDATE REQUEST
 	@PutMapping("/candidate/{id}")
 	public ResponseEntity<Candidate> updateCandidate(@PathVariable("id") long candidateId, @RequestBody Candidate candidate) {
+		logger.info("Request received to update Candidate with id={} onto Database",candidate.getId());
 		return new ResponseEntity<Candidate>(candidateService.updateCandidate(candidate, candidateId), HttpStatus.OK);
 	}
 	
@@ -53,6 +59,7 @@ public class CandidateController {
 	@DeleteMapping("/candidate/{id}")
 	public ResponseEntity<String> deleteCandidate(@PathVariable("id") long candidateId) {
 		candidateService.deleteCandidate(candidateId);
+		logger.info("Request received to delete Candidate with id={} onto Database",candidateId);
 		return new ResponseEntity<String>("Candidate Deleted Successfully", HttpStatus.OK);
 	}
 }
